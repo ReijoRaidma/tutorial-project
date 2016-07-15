@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -6,7 +8,11 @@ from django.views import generic
 from .models import Choice, Question
 from django.utils import timezone
 
-# Create your views here.
+from rest_framework import viewsets
+
+from .serializers import QuestionSerializer, ChoiceSerializer
+
+
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -49,3 +55,31 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+def questionss_api(request):
+    questions = Question.objects.all()
+
+    data = []
+    for question in questions:
+        data.append({
+            'text:': question.question_text,
+            'pub_date': question.pub_date.strftime("%Y-%m-%d %H:%M:%S")
+        })
+    print(data)
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Question.objects.all().order_by('-date_joined')
+    serializer_class = QuestionSerializer
+
+
+class ChoiceViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
