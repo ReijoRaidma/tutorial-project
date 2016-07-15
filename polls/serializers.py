@@ -1,4 +1,4 @@
-from .models import Choice, Question
+from polls.models import Choice, Question
 from rest_framework import serializers
 
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):

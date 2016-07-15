@@ -73,7 +73,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = Question.objects.all().order_by('-date_joined')
+    queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
 
